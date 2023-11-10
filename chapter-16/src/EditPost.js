@@ -1,12 +1,25 @@
-import React, { useEffect, useContext } from "react";
-import { Link, useParams } from "react-router-dom";
-import DataContext from "./context/DataContext";
+import React, { useEffect } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { format } from "date-fns";
+import { useStoreActions, useStoreState } from "easy-peasy";
 
-const Edit = () => {
-  const { posts, handleEdit, editTitle, setEditTitle, editBody, setEditBody } =
-    useContext(DataContext);
+const EditPost = () => {
+  const editTitle = useStoreState((state) => state.editTitle);
+  const setEditTitle = useStoreActions((actions) => actions.setEditTitle);
+  const editBody = useStoreState((state) => state.editBody);
+  const setEditBody = useStoreActions((actions) => actions.setEditBody);
+  const getPostById = useStoreState((state) => state.getPostById);
+  const editPost = useStoreActions((actions) => actions.editPost);
+  const navigate = useNavigate();
   const { id } = useParams();
-  const post = posts.find((post) => post.id.toString() === id);
+  const post = getPostById(id);
+
+  const handleEdit = async (id) => {
+    const datetime = format(new Date(), "MMMM dd, yyyy pp");
+    editPost({ id, title: editTitle, body: editBody, datetime });
+
+    navigate("/");
+  };
 
   useEffect(() => {
     if (post) {
@@ -54,4 +67,4 @@ const Edit = () => {
   );
 };
 
-export default Edit;
+export default EditPost;

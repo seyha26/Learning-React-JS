@@ -1,10 +1,13 @@
-import React, { useContext } from "react";
-import { Link, useParams } from "react-router-dom";
-import DataContext from "./context/DataContext";
+import React from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import { useStoreActions, useStoreState } from "easy-peasy";
 const PostPage = () => {
-  const { posts, handleDelete } = useContext(DataContext);
+  const deletePost = useStoreActions((actions) => actions.deletePost);
+  const getPostById = useStoreState((state) => state.getPostById);
+  const navigate = useNavigate();
   const { id } = useParams();
-  const post = posts.find((post) => post.id.toString() === id);
+  const post = getPostById(id);
+
   return (
     <main className="PostPage">
       <article className="post">
@@ -18,7 +21,10 @@ const PostPage = () => {
             </Link>
             <button
               className="deleteButton"
-              onClick={() => handleDelete(post.id)}
+              onClick={() => {
+                deletePost(post.id);
+                navigate("/");
+              }}
             >
               Delete Post
             </button>

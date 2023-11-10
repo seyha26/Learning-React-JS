@@ -1,17 +1,17 @@
-import React, { useContext } from "react";
+import React from "react";
 import Feed from "./Feed";
-import DataContext from "./context/DataContext";
+import { useStoreState } from "easy-peasy";
 
-const Home = () => {
-  const { isLoading, posts, fetchError } = useContext(DataContext);
+const Home = ({ isLoading, fetchError }) => {
+  const searchResults = useStoreState((state) => state.searchResults);
   return (
     <main className="Home">
       {isLoading ? (
         <p>Loading...</p>
       ) : fetchError ? (
         <p style={{ color: "red" }}>{fetchError}</p>
-      ) : posts.length ? (
-        <Feed />
+      ) : searchResults.length ? (
+        <Feed searchResults={searchResults} />
       ) : (
         <p style={{ marginTop: "2rem" }}>No posts to display.</p>
       )}

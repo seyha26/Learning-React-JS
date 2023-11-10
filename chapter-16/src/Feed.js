@@ -1,12 +1,10 @@
-import React, { useContext } from "react";
+import React from "react";
 import Post from "./Post";
-import DataContext from "./context/DataContext";
 
-const Feed = () => {
-  const { posts } = useContext(DataContext);
+const Feed = ({ searchResults }) => {
   return (
     <>
-      {posts.map((post) => (
+      {searchResults.map((post) => (
         <Post key={post.id} post={post} />
       ))}
     </>

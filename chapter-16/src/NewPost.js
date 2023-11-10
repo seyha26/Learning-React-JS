@@ -1,9 +1,27 @@
-import React, { useContext } from "react";
-import DataContext from "./context/DataContext";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { format } from "date-fns";
+import { useStoreState, useStoreActions } from "easy-peasy";
 
 const NewPost = () => {
-  const { handleSubmit, postTitle, setPostTitle, postBody, setPostBody } =
-    useContext(DataContext);
+  const postTitle = useStoreState((state) => state.postTitle);
+  const setPostTitle = useStoreActions((actions) => actions.setPostTitle);
+  const postBody = useStoreState((state) => state.postBody);
+  const setPostBody = useStoreActions((actions) => actions.setPostBody);
+  const posts = useStoreState((state) => state.posts);
+  const savePost = useStoreActions((actions) => actions.savePost);
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const id = posts.length ? posts[posts.length - 1].id + 1 : 1;
+    const datetime = format(new Date(), "MMMM dd, yyyy pp");
+
+    const newPost = { id, title: postTitle, datetime, body: postBody };
+    savePost(newPost);
+
+    navigate("/");
+  };
   return (
     <main className="NewPost">
       <h2>New Post</h2>
